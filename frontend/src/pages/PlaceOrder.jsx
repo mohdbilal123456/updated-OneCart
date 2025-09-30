@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import Title from '../component/Title'
 import CartTotal from '../component/CartTotal'
-import razorpay from '../assets/razorpay.jpg'
+import razorpay from '../assets/Razorpay.jpg'
 import { shopDataContext } from '../context/ShopContext'
 import { dataContext } from '../context/AuthContext'
 import axios from 'axios'
