@@ -15,18 +15,24 @@ const app = express()
 const port = process.env.PORT || 5000
 app.use(express.json())
 
-app.use(cookieParser());
-const corsOptions = {
-  origin: "https://updated-one-cart.netlify.app",
+const allowedOrigins = ["https://updated-one-cart.netlify.app"];
+
+app.use(cors({
+  origin: function(origin, callback){
+    if(!origin) return callback(null, true); // postman, server-to-server requests
+    if(allowedOrigins.indexOf(origin) === -1){
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-};
+  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
+  allowedHeaders: ["Content-Type","Authorization"]
+}));
 
-app.use(cors(corsOptions));
-
-// OPTIONS preflight handle
-app.options("*", cors(corsOptions));
+// Preflight
+app.options("*", cors());
 
 app.get("/",(req,res)=>{
       res.send("Hello !!")
