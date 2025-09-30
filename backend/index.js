@@ -16,10 +16,18 @@ const port = process.env.PORT || 5000
 app.use(express.json())
 
 app.use(cookieParser());
-app.use(cors({
-      origin : ["https://updated-one-cart.netlify.app","http://localhost:5174"],
-      credentials :true
-}))
+const corsOptions = {
+  origin: "https://updated-one-cart.netlify.app",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+};
+
+app.use(cors(corsOptions));
+
+// OPTIONS preflight handle
+app.options("*", cors(corsOptions));
+
 app.get("/",(req,res)=>{
       res.send("Hello !!")
 })
