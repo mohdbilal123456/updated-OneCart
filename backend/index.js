@@ -17,7 +17,7 @@ app.use(express.json())
 
 app.use(cookieParser());
 app.use(cors({
-      origin : ["https://updated-one-cart.netlify.app/login","http://localhost:5174"],
+      origin : ["https://updated-one-cart.netlify.app","http://localhost:5174"],
       credentials :true
 }))
 app.get("/",(req,res)=>{
