@@ -18,14 +18,14 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cookieParser());
 
-// Allowed origins for frontend
+//  Allowed origins (Netlify frontend)
 const allowedOrigins = ["https://updated-one-cart.netlify.app"];
 
 app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin) return callback(null, true); // allow Postman / server-to-server requests
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // allow Postman / server-to-server
     if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      const msg = 'CORS policy does not allow access from this origin.';
       return callback(new Error(msg), false);
     }
     return callback(null, true);
@@ -35,8 +35,8 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-//  Preflight (fixed "*" → "/*")
-app.options("/*", cors());
+//  Preflight (for all OPTIONS requests)
+app.options('*', cors());
 
 // Routes
 app.get("/", (req, res) => {
@@ -49,8 +49,15 @@ app.use('/api/user', userRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/order', orderRoutes);
 
+// ✅ Error handling middleware (optional but recommended)
+app.use((err, req, res, next) => {
+  console.error("Error:", err.message);
+  res.status(500).json({ success: false, message: err.message });
+});
+
 // Start server
 app.listen(port, () => {
-  console.log(`🚀 Server started at port ${port}`);
+  console.log(` Server started at port ${port}`);
   connectDb();
 });
+
