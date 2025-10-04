@@ -6,7 +6,7 @@ function About() {
     <div
       className="w-full min-h-[calc(100vh-70px)] 
       bg-gradient-to-l from-[#141414] to-[#0c2025] 
-      flex items-center justify-center px-6 pb-18 pt-20"
+      flex items-center justify-center px-6 pb-22 pt-20"
     >
       <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         
