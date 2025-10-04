@@ -1,3 +1,4 @@
+
 import React, { useContext, useState, useRef } from 'react';
 import ai from "../assets/ai.png";
 import { shopDataContext } from '../context/ShopContext';
@@ -9,6 +10,7 @@ function Ai() {
   const { showSearch, setShowSearch } = useContext(shopDataContext);
   const navigate = useNavigate();
   const [activeAi, setActiveAi] = useState(false);
+  const [listening, setListening] = useState(false); // 🔑 to prevent auto trigger
   const openingSound = useRef(new Audio(open));
 
   const speak = (message) => {
@@ -17,24 +19,31 @@ function Ai() {
   };
 
   const startRecognition = () => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (listening) {
+      console.log("Already listening, ignoring extra click...");
+      return;
+    }
+
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       toast.error("Speech Recognition not supported!");
       return;
     }
 
-    // create new recognition every click
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.lang = "en-US";
 
     recognition.onstart = () => {
       setActiveAi(true);
+      setListening(true);
       openingSound.current.play().catch(() => {});
     };
 
     recognition.onend = () => {
       setActiveAi(false);
+      setListening(false);
     };
 
     recognition.onresult = (e) => {
@@ -78,10 +87,12 @@ function Ai() {
     };
 
     try {
-      recognition.start(); // start mic on every click
+      recognition.start();
     } catch (err) {
       console.error("Error starting recognition:", err);
       toast.error("Microphone access denied or not available");
+      setListening(false);
+      setActiveAi(false);
     }
   };
 
@@ -94,10 +105,14 @@ function Ai() {
         src={ai}
         alt="AI Assistant"
         className={`w-[100px] cursor-pointer transition-transform duration-300 ${
-          activeAi ? 'translate-x-[10%] translate-y-[-10%] scale-125' : 'translate-x-[0] translate-y-[0] scale-100'
+          activeAi
+            ? 'translate-x-[10%] translate-y-[-10%] scale-125'
+            : 'translate-x-[0] translate-y-[0] scale-100'
         }`}
         style={{
-          filter: activeAi ? "drop-shadow(0px 0px 30px #00d2fc)" : "drop-shadow(0px 0px 20px black)"
+          filter: activeAi
+            ? "drop-shadow(0px 0px 30px #00d2fc)"
+            : "drop-shadow(0px 0px 20px black)"
         }}
       />
     </div>
