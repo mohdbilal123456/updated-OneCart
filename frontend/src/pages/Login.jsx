@@ -154,7 +154,7 @@ export default function Login() {
                    You Have any Account ?
                     <span
                       className="text-[#5555f6cf] text-[17px] font-semibold cursor-pointer"
-                      onClick={() => navigate("/registration")}
+                      onClick={() => navigate("/signup")}
                     >
                       Registration
                     </span>
